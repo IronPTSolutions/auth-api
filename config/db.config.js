@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dbName = 'auth-api';
-const dbUri = `mongodb://localhost/${dbName}`;
+const dbUri = process.env.MONGODB_URI || `mongodb://localhost/${dbName}`;
 
 mongoose.connect(dbUri, { useMongoClient: true });
 mongoose.Promise = Promise;
