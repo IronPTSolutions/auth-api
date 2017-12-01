@@ -20,7 +20,6 @@ module.exports.get = (req, res, next) => {
 
 module.exports.create = (req, res, next) => {
     const user = new User(req.body);
-
     User.findOne({ email: user.email })
         .then(existingUser => {
             if (existingUser) {
@@ -31,6 +30,25 @@ module.exports.create = (req, res, next) => {
                         res.status(200).json(user);
                     })
                     .catch(err => next(err));
+            }
+        })
+        .catch(err => next(err));
+}
+
+module.exports.edit = (req, res, next) => {
+    console.log(req);
+    const user = {
+        name: req.body.name
+    }
+    if (req.file) {
+        user.photoUrl = `/uploads/${req.file.filename}`;
+    }
+    User.findByIdAndUpdate(req.params.id, { $set : user }, { new: true })
+        .then(user => {
+            if (!user) {
+                res.status(404).json({ message: 'User not found' });
+            } else {
+                res.json(user);
             }
         })
         .catch(err => next(err));
